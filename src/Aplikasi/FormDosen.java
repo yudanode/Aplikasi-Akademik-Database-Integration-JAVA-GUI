@@ -26,6 +26,7 @@ public class FormDosen extends javax.swing.JFrame {
     public FormDosen() {
         initComponents();
         tampilData();
+        txtId.setVisible(false);
     }
     
     private void tampilData(){
@@ -99,6 +100,7 @@ public class FormDosen extends javax.swing.JFrame {
         btnEdit1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         txtCari = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -144,6 +146,8 @@ public class FormDosen extends javax.swing.JFrame {
 
         jTextField1.setText("CARI");
 
+        txtId.setText("jTextField2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -168,7 +172,9 @@ public class FormDosen extends javax.swing.JFrame {
                                     .addComponent(txtNidn, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(129, 129, 129))
+                        .addGap(53, 53, 53)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -202,10 +208,15 @@ public class FormDosen extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -259,6 +270,7 @@ public class FormDosen extends javax.swing.JFrame {
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
         int baris = tblData.rowAtPoint(evt.getPoint());
+        txtId.setText(tblData.getValueAt(baris, 0).toString());
         txtNidn.setText(tblData.getValueAt(baris, 1).toString());
         txtNama.setText(tblData.getValueAt(baris, 2).toString());
         txtAlamat.setText(tblData.getValueAt(baris, 3).toString());
@@ -268,7 +280,7 @@ public class FormDosen extends javax.swing.JFrame {
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         try {
             Connection conn = Koneksi.getKoneksi();
-            String sql = "UPDATE dosen SET " + "nidn=?, " +  "alamat=?, " + "no_hp=? " + "WHERE nama_dosen=?";
+            String sql = "UPDATE dosen SET " + "nidn=?, " +  "alamat=?, " + "no_hp=?, " + "nama_dosen=? " + "WHERE id_dosen=?";
             
             PreparedStatement pst = conn.prepareStatement(sql);
             
@@ -276,6 +288,7 @@ public class FormDosen extends javax.swing.JFrame {
             pst.setString(2, txtAlamat.getText());
             pst.setString(3, txtNo.getText());
             pst.setString(4, txtNama.getText());
+            pst.setInt(5, Integer.parseInt(txtId.getText()));
             
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data berhasil di update");
@@ -325,6 +338,7 @@ public class FormDosen extends javax.swing.JFrame {
     private javax.swing.JTable tblData;
     private javax.swing.JTextArea txtAlamat;
     private javax.swing.JTextField txtCari;
+    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtNidn;
     private javax.swing.JTextField txtNo;
