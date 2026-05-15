@@ -97,7 +97,7 @@ public class FormDosen extends javax.swing.JFrame {
         tblData = new javax.swing.JTable();
         btnSimpan = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
-        btnEdit1 = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         txtCari = new javax.swing.JTextField();
         txtId = new javax.swing.JTextField();
@@ -142,7 +142,8 @@ public class FormDosen extends javax.swing.JFrame {
         btnEdit.setText("Edit");
         btnEdit.addActionListener(this::btnEditActionPerformed);
 
-        btnEdit1.setText("Edit");
+        btnHapus.setText("Hapus");
+        btnHapus.addActionListener(this::btnHapusActionPerformed);
 
         jTextField1.setText("CARI");
 
@@ -187,7 +188,7 @@ public class FormDosen extends javax.swing.JFrame {
                                 .addGap(76, 76, 76)
                                 .addComponent(btnEdit)))
                         .addGap(62, 62, 62)
-                        .addComponent(btnEdit1)
+                        .addComponent(btnHapus)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -225,7 +226,7 @@ public class FormDosen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSimpan)
                     .addComponent(btnEdit)
-                    .addComponent(btnEdit1))
+                    .addComponent(btnHapus))
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -299,6 +300,39 @@ public class FormDosen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        try {
+
+            Connection conn
+                    = Koneksi.getKoneksi();
+
+            String sql
+                    = "DELETE FROM dosen "
+                    + "WHERE nidn=?";
+
+            PreparedStatement pst
+                    = conn.prepareStatement(sql);
+
+            pst.setString(1,
+                    txtNidn.getText());
+
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Data Berhasil Dihapus");
+
+            tampilData();
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    e);
+
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -326,7 +360,7 @@ public class FormDosen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnEdit1;
+    private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
