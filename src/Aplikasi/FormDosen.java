@@ -98,9 +98,9 @@ public class FormDosen extends javax.swing.JFrame {
         btnSimpan = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
         txtCari = new javax.swing.JTextField();
         txtId = new javax.swing.JTextField();
+        btnCari = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -145,9 +145,10 @@ public class FormDosen extends javax.swing.JFrame {
         btnHapus.setText("Hapus");
         btnHapus.addActionListener(this::btnHapusActionPerformed);
 
-        jTextField1.setText("CARI");
-
         txtId.setText("jTextField2");
+
+        btnCari.setText("CARI");
+        btnCari.addActionListener(this::btnCariActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,18 +179,19 @@ public class FormDosen extends javax.swing.JFrame {
                         .addGap(60, 60, 60))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtCari)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnSimpan)
                                 .addGap(76, 76, 76)
-                                .addComponent(btnEdit)))
-                        .addGap(62, 62, 62)
-                        .addComponent(btnHapus)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(btnEdit)
+                                .addGap(62, 62, 62)
+                                .addComponent(btnHapus)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtCari)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnCari)
+                                .addGap(218, 218, 218))))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -229,9 +231,9 @@ public class FormDosen extends javax.swing.JFrame {
                     .addComponent(btnHapus))
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCari))
+                .addGap(25, 25, 25)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
         );
@@ -268,15 +270,6 @@ public class FormDosen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
-
-    private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
-        int baris = tblData.rowAtPoint(evt.getPoint());
-        txtId.setText(tblData.getValueAt(baris, 0).toString());
-        txtNidn.setText(tblData.getValueAt(baris, 1).toString());
-        txtNama.setText(tblData.getValueAt(baris, 2).toString());
-        txtAlamat.setText(tblData.getValueAt(baris, 3).toString());
-        txtNo.setText(tblData.getValueAt(baris, 4).toString());
-    }//GEN-LAST:event_tblDataMouseClicked
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         try {
@@ -333,6 +326,64 @@ public class FormDosen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnHapusActionPerformed
 
+    private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
+        int baris = tblData.rowAtPoint(evt.getPoint());
+        txtId.setText(tblData.getValueAt(baris, 0).toString());
+        txtNidn.setText(tblData.getValueAt(baris, 1).toString());
+        txtNama.setText(tblData.getValueAt(baris, 2).toString());
+        txtAlamat.setText(tblData.getValueAt(baris, 3).toString());
+        txtNo.setText(tblData.getValueAt(baris, 4).toString());
+    }//GEN-LAST:event_tblDataMouseClicked
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID");
+        model.addColumn("NIDN");
+        model.addColumn("Nama");
+        model.addColumn("Alamat");
+        model.addColumn("No HP");
+        
+        try {
+
+        Connection conn = Koneksi.getKoneksi();
+
+        String sql =
+        "SELECT * FROM dosen "
+        + "WHERE nama_dosen LIKE '%"
+        + txtCari.getText()
+        + "%'";
+
+        Statement st =
+        conn.createStatement();
+
+        ResultSet rs =
+        st.executeQuery(sql);
+
+        while(rs.next()) {
+
+            model.addRow(new Object[] {
+
+                rs.getString("id_dosen"),
+                rs.getString("nidn"),
+                rs.getString("nama_dosen"),
+                rs.getString("alamat"),
+                rs.getString("no_hp")
+
+            });
+
+        }
+
+        tblData.setModel(model);
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+        null,
+        e);
+
+    }
+    }//GEN-LAST:event_btnCariActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -359,6 +410,7 @@ public class FormDosen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCari;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnSimpan;
@@ -368,7 +420,6 @@ public class FormDosen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblData;
     private javax.swing.JTextArea txtAlamat;
     private javax.swing.JTextField txtCari;
