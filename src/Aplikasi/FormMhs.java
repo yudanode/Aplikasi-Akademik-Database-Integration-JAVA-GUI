@@ -4,6 +4,16 @@
  */
 package Aplikasi;
 
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import Aplikasi.Koneksi;
+
 /**
  *
  * @author FLEX-5
@@ -17,7 +27,58 @@ public class FormMhs extends javax.swing.JFrame {
      */
     public FormMhs() {
         initComponents();
+        tampilData();
     }
+    
+    private void tampilData() {
+
+    DefaultTableModel model =
+    new DefaultTableModel();
+
+    model.addColumn("ID");
+    model.addColumn("Nim");
+    model.addColumn("Nama");
+    model.addColumn("Jurusan");
+    model.addColumn("Alamat");
+
+    try {
+
+        Connection conn = Koneksi.getKoneksi();
+
+        Statement st =
+        conn.createStatement();
+
+        String sql =
+        "SELECT * FROM mahasiswa";
+
+        ResultSet rs =
+        st.executeQuery(sql);
+
+        while(rs.next()) {
+
+            model.addRow(new Object[] {
+
+                rs.getString("id_mahasiswa"),
+                rs.getString("nim"),
+                rs.getString("nama_mahasiswa"),
+                rs.getString("jurusan"),
+                rs.getString("alamat")
+
+            });
+
+        }
+
+        tblMhs.setModel(model);
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+        null,
+        e);
+
+    }
+
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -86,9 +147,15 @@ public class FormMhs extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblMhs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMhsMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblMhs);
 
         btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(this::btnSimpanActionPerformed);
 
         btnEdit.setText("Edit");
 
@@ -183,6 +250,47 @@ public class FormMhs extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        try {
+            Connection conn = Koneksi.getKoneksi();
+            String sql
+                    = "INSERT INTO mahasiswa "
+                    + "(nim,nama_mahasiswa,"
+                    + "jurusan,alamat)"
+                    + "VALUES (?,?,?,?)";
+            
+            PreparedStatement pst  = conn.prepareStatement(sql);
+            
+            pst.setString(1, txtNim.getText());
+            pst.setString(2, txtNama.getText());
+            pst.setString(3, cmbJurusan.getSelectedItem().toString());
+            pst.setString(4, txtAlamat.getText());
+            pst.executeUpdate();
+            
+            JOptionPane.showMessageDialog(
+                    null, "Data berhasil di simpan"
+            );
+            tampilData();
+        }catch(Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void tblMhsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMhsMouseClicked
+        int baris
+                = tblMhs.rowAtPoint(evt.getPoint());
+        txtNim.setText(
+                tblMhs.getValueAt(baris, 1).toString());
+        txtNama.setText(
+                tblMhs.getValueAt(baris, 2).toString());
+         cmbJurusan.setSelectedItem(
+                tblMhs.getValueAt(baris, 4).toString());
+        txtAlamat.setText(
+                tblMhs.getValueAt(baris, 3).toString());
+
+       
+    }//GEN-LAST:event_tblMhsMouseClicked
 
     /**
      * @param args the command line arguments
