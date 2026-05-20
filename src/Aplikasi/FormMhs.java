@@ -19,7 +19,7 @@ import Aplikasi.Koneksi;
  * @author FLEX-5
  */
 public class FormMhs extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormMhs.class.getName());
 
     /**
@@ -30,56 +30,55 @@ public class FormMhs extends javax.swing.JFrame {
         tampilData();
         txtId.setVisible(false);
     }
-    
+
     private void tampilData() {
 
-    DefaultTableModel model =
-    new DefaultTableModel();
+        DefaultTableModel model
+                = new DefaultTableModel();
 
-    model.addColumn("ID");
-    model.addColumn("Nim");
-    model.addColumn("Nama");
-    model.addColumn("Jurusan");
-    model.addColumn("Alamat");
+        model.addColumn("ID");
+        model.addColumn("Nim");
+        model.addColumn("Nama");
+        model.addColumn("Jurusan");
+        model.addColumn("Alamat");
 
-    try {
+        try {
 
-        Connection conn = Koneksi.getKoneksi();
+            Connection conn = Koneksi.getKoneksi();
 
-        Statement st =
-        conn.createStatement();
+            Statement st
+                    = conn.createStatement();
 
-        String sql =
-        "SELECT * FROM mahasiswa";
+            String sql
+                    = "SELECT * FROM mahasiswa";
 
-        ResultSet rs =
-        st.executeQuery(sql);
+            ResultSet rs
+                    = st.executeQuery(sql);
 
-        while(rs.next()) {
+            while (rs.next()) {
 
-            model.addRow(new Object[] {
+                model.addRow(new Object[]{
+                    rs.getString("id_mahasiswa"),
+                    rs.getString("nim"),
+                    rs.getString("nama_mahasiswa"),
+                    rs.getString("jurusan"),
+                    rs.getString("alamat")
 
-                rs.getString("id_mahasiswa"),
-                rs.getString("nim"),
-                rs.getString("nama_mahasiswa"),
-                rs.getString("jurusan"),
-                rs.getString("alamat")
+                });
 
-            });
+            }
+
+            tblMhs.setModel(model);
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    e);
 
         }
 
-        tblMhs.setModel(model);
-
-    } catch (Exception e) {
-
-        JOptionPane.showMessageDialog(
-        null,
-        e);
-
     }
-
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -163,8 +162,10 @@ public class FormMhs extends javax.swing.JFrame {
         btnEdit.addActionListener(this::btnEditActionPerformed);
 
         btnHapus.setText("Hapus");
+        btnHapus.addActionListener(this::btnHapusActionPerformed);
 
         btnCari.setText("Cari");
+        btnCari.addActionListener(this::btnCariActionPerformed);
 
         txtId.setText("id");
 
@@ -267,20 +268,20 @@ public class FormMhs extends javax.swing.JFrame {
                     + "(nim,nama_mahasiswa,"
                     + "jurusan,alamat)"
                     + "VALUES (?,?,?,?)";
-            
-            PreparedStatement pst  = conn.prepareStatement(sql);
-            
+
+            PreparedStatement pst = conn.prepareStatement(sql);
+
             pst.setString(1, txtNim.getText());
             pst.setString(2, txtNama.getText());
             pst.setString(3, cmbJurusan.getSelectedItem().toString());
             pst.setString(4, txtAlamat.getText());
             pst.executeUpdate();
-            
+
             JOptionPane.showMessageDialog(
                     null, "Data berhasil di simpan"
             );
             tampilData();
-        }catch(Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
@@ -292,16 +293,16 @@ public class FormMhs extends javax.swing.JFrame {
                 tblMhs.getValueAt(baris, 1).toString());
         txtNama.setText(
                 tblMhs.getValueAt(baris, 2).toString());
-         cmbJurusan.setSelectedItem(
+        cmbJurusan.setSelectedItem(
                 tblMhs.getValueAt(baris, 4).toString());
         txtAlamat.setText(
                 tblMhs.getValueAt(baris, 3).toString());
 
-       
+
     }//GEN-LAST:event_tblMhsMouseClicked
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-         try {
+        try {
 
             Connection conn
                     = Koneksi.getKoneksi();
@@ -319,7 +320,7 @@ public class FormMhs extends javax.swing.JFrame {
 
             pst.setString(1,
                     txtNim.getText());
-            
+
             pst.setString(2,
                     txtNama.getText());
 
@@ -328,10 +329,8 @@ public class FormMhs extends javax.swing.JFrame {
 
             pst.setString(4,
                     txtAlamat.getText());
-            
-            pst.setInt(5, Integer.parseInt(txtId.getText()));
 
-            
+            pst.setInt(5, Integer.parseInt(txtId.getText()));
 
             pst.executeUpdate();
 
@@ -349,6 +348,74 @@ public class FormMhs extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        try {
+            Connection conn = Koneksi.getKoneksi();
+            String sql = "DELETE FROM mahasiswa " + "WHERE nim=?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            
+            pst.setString(1, txtNim.getText());
+            
+            pst.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Data Berhasil dihapus");
+            
+            tampilData();
+        }catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID");
+        model.addColumn("Nim");
+        model.addColumn("Nama");
+        model.addColumn("Jurusan");
+        model.addColumn("Alamat");
+        
+        try {
+
+        Connection conn = Koneksi.getKoneksi();
+
+        String sql =
+        "SELECT * FROM mahasiswa "
+        + "WHERE nama_mahasiswa LIKE '%"
+        + txtCari.getText()
+        + "%'";
+
+        Statement st =
+        conn.createStatement();
+
+        ResultSet rs =
+        st.executeQuery(sql);
+
+        while(rs.next()) {
+
+            model.addRow(new Object[] {
+
+                rs.getString("id_mahasiswa"),
+                rs.getString("nim"),
+                rs.getString("nama_mahasiswa"),
+                rs.getString("jurusan"),
+                rs.getString("alamat")
+
+            });
+
+        }
+
+        tblMhs.setModel(model);
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+        null,
+        e);
+
+    }
+    }//GEN-LAST:event_btnCariActionPerformed
 
     /**
      * @param args the command line arguments
