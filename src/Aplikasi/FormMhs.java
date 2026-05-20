@@ -28,6 +28,7 @@ public class FormMhs extends javax.swing.JFrame {
     public FormMhs() {
         initComponents();
         tampilData();
+        txtId.setVisible(false);
     }
     
     private void tampilData() {
@@ -107,6 +108,7 @@ public class FormMhs extends javax.swing.JFrame {
         btnHapus = new javax.swing.JButton();
         txtCari = new javax.swing.JTextField();
         btnCari = new javax.swing.JButton();
+        txtId = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,15 +160,30 @@ public class FormMhs extends javax.swing.JFrame {
         btnSimpan.addActionListener(this::btnSimpanActionPerformed);
 
         btnEdit.setText("Edit");
+        btnEdit.addActionListener(this::btnEditActionPerformed);
 
         btnHapus.setText("Hapus");
 
         btnCari.setText("Cari");
 
+        txtId.setText("id");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 19, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(btnCari)
+                .addGap(18, 18, 18)
+                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -202,16 +219,6 @@ public class FormMhs extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(68, 68, 68)))
                 .addGap(32, 32, 32))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 19, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(btnCari)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,7 +249,8 @@ public class FormMhs extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCari))
+                    .addComponent(btnCari)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(75, 75, 75))
@@ -278,8 +286,8 @@ public class FormMhs extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void tblMhsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMhsMouseClicked
-        int baris
-                = tblMhs.rowAtPoint(evt.getPoint());
+        int baris = tblMhs.rowAtPoint(evt.getPoint());
+        txtId.setText(tblMhs.getValueAt(baris, 0).toString());
         txtNim.setText(
                 tblMhs.getValueAt(baris, 1).toString());
         txtNama.setText(
@@ -291,6 +299,56 @@ public class FormMhs extends javax.swing.JFrame {
 
        
     }//GEN-LAST:event_tblMhsMouseClicked
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+         try {
+
+            Connection conn
+                    = Koneksi.getKoneksi();
+
+            String sql
+                    = "UPDATE mahasiswa SET "
+                    + "nim=?, "
+                    + "nama_mahasiswa=?, "
+                    + "jurusan=?, "
+                    + "alamat=? "
+                    + "WHERE id_mahasiswa=? ";
+
+            PreparedStatement pst
+                    = conn.prepareStatement(sql);
+
+            pst.setString(1,
+                    txtNim.getText());
+            
+            pst.setString(2,
+                    txtNama.getText());
+
+            pst.setString(3,
+                    cmbJurusan.getSelectedItem().toString());
+
+            pst.setString(4,
+                    txtAlamat.getText());
+            
+            pst.setInt(5, Integer.parseInt(txtId.getText()));
+
+            
+
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Data Berhasil Diubah");
+
+            tampilData();
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    e);
+
+        }
+    }//GEN-LAST:event_btnEditActionPerformed
 
     /**
      * @param args the command line arguments
@@ -334,6 +392,7 @@ public class FormMhs extends javax.swing.JFrame {
     private javax.swing.JTable tblMhs;
     private javax.swing.JTextField txtAlamat;
     private javax.swing.JTextField txtCari;
+    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtNim;
     // End of variables declaration//GEN-END:variables
