@@ -27,6 +27,8 @@ public class FormNilai extends javax.swing.JFrame {
      */
     public FormNilai() {
         initComponents();
+        tampilMahasiswa();
+        tampilMatkul();
     }
 
     private void tampilMahasiswa() {
@@ -161,6 +163,7 @@ public class FormNilai extends javax.swing.JFrame {
         txtNilai = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblNilai = new javax.swing.JTable();
+        btnSimpan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -191,6 +194,9 @@ public class FormNilai extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblNilai);
 
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(this::btnSimpanActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -203,14 +209,17 @@ public class FormNilai extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(37, 37, 37)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(69, 69, 69)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbMahasiswa, 0, 203, Short.MAX_VALUE)
-                            .addComponent(cbMatkul, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNilai)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4))
+                                .addGap(69, 69, 69)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbMahasiswa, 0, 203, Short.MAX_VALUE)
+                                    .addComponent(cbMatkul, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtNilai)))
+                            .addComponent(btnSimpan)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -233,7 +242,9 @@ public class FormNilai extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtNilai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addComponent(btnSimpan)
+                .addGap(28, 28, 28)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -242,10 +253,57 @@ public class FormNilai extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbMahasiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMahasiswaActionPerformed
-        String mahasiswa = cbMahasiswa.getSelectedItem().toString();
-
-        String nim = mahasiswa.split(" - ")[0];
+  
     }//GEN-LAST:event_cbMahasiswaActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        try {
+
+        Connection conn = Koneksi.getKoneksi();
+
+        // AMBIL NIM
+        String mahasiswa =
+        cbMahasiswa.getSelectedItem().toString();
+
+        String nim =
+        mahasiswa.split(" - ")[0];
+
+        // AMBIL KODE MATKUL
+        String matkul =
+        cbMatkul.getSelectedItem().toString();
+
+        String kodeMatkul =
+        matkul.split(" - ")[0];
+
+        // QUERY
+        String sql =
+        "INSERT INTO nilai(nim,kode_matkul,nilai) VALUES(?,?,?)";
+
+        PreparedStatement ps =
+        conn.prepareStatement(sql);
+
+        ps.setString(1, nim);
+
+        ps.setString(2, kodeMatkul);
+
+        ps.setDouble(3,
+        Double.parseDouble(txtNilai.getText()));
+
+        ps.executeUpdate();
+
+        JOptionPane.showMessageDialog(this,
+        "Data berhasil disimpan");
+
+        tampilData();
+
+        txtNilai.setText("");
+
+    } catch(Exception e) {
+
+        JOptionPane.showMessageDialog(this,
+        e.getMessage());
+    }
+    }//GEN-LAST:event_btnSimpanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -273,6 +331,7 @@ public class FormNilai extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> cbMahasiswa;
     private javax.swing.JComboBox<String> cbMatkul;
     private javax.swing.JLabel jLabel1;

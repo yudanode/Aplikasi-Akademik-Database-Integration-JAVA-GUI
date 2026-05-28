@@ -317,83 +317,91 @@ public class FormJadwal extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         try {
+            if (cbMatkul.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Pilih Mata Kuliah terlebih dahulu!");
+                return;
+            }
+            if (cbDosen.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Pilih Dosen terlebih dahulu!");
+                return;
+            }
 
-        Connection conn = Koneksi.getKoneksi();
-        String matkul =
-        cbMatkul.getSelectedItem().toString();
+            Connection conn = Koneksi.getKoneksi();
+            String matkul
+                    = cbMatkul.getSelectedItem().toString();
 
-        String kodeMatkul =
-        matkul.split(" - ")[0];
+            String kodeMatkul
+                    = matkul.split(" - ")[0];
 
-        String dosen =
-        cbDosen.getSelectedItem().toString();
+            String dosen
+                    = cbDosen.getSelectedItem().toString();
 
-        String nidn =
-        dosen.split(" - ")[0];
+            String nidn
+                    = dosen.split(" - ")[0];
 
-        String sql =
-        "INSERT INTO jadwal " +
-        "(kode_matkul,nidn,hari,jam,ruang) " +
-        "VALUES(?,?,?,?,?)";
+            String sql
+                    = "INSERT INTO jadwal "
+                    + "(kode_matkul,nidn,hari,jam,ruang) "
+                    + "VALUES(?,?,?,?,?)";
 
-        PreparedStatement pst =
-        conn.prepareStatement(sql);
+            PreparedStatement pst
+                    = conn.prepareStatement(sql);
 
-        pst.setString(1, kodeMatkul);
-        pst.setString(2, nidn);
-        pst.setString(3,
-        cbHari.getSelectedItem().toString());
-        pst.setString(4,
-        txtJam.getText());
-        pst.setString(5,
-        txtRuang.getText());
-        pst.executeUpdate();
+            pst.setString(1, kodeMatkul);
+            pst.setString(2, nidn);
+            pst.setString(3,
+                    cbHari.getSelectedItem().toString());
+            pst.setString(4,
+                    txtJam.getText());
+            pst.setString(5,
+                    txtRuang.getText());
+            pst.executeUpdate();
 
-        JOptionPane.showMessageDialog(this,
-        "Jadwal berhasil disimpan");
+            JOptionPane.showMessageDialog(this,
+                    "Jadwal berhasil disimpan");
 
-        tampilData();
+            tampilData();
 
-        resetForm();
+            resetForm();
 
-    } catch(Exception e) {
+        } catch (Exception e) {
 
-        JOptionPane.showMessageDialog(this,
-        e.getMessage());
-    }
+            JOptionPane.showMessageDialog(this,
+                    e.getMessage());
+        }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-         try {
+        try {
 
-        int row = tblJadwal.getSelectedRow();
-DefaultTableModel model =
-    new DefaultTableModel();
-        String id =
-        model.getValueAt(row,0).toString();
+            int row = tblJadwal.getSelectedRow();
+            DefaultTableModel model
+                    = new DefaultTableModel();
+            String id
+                    = model.getValueAt(row, 0).toString();
 
-        Connection conn = Koneksi.getKoneksi();
+            Connection conn = Koneksi.getKoneksi();
 
-        String sql =
-        "DELETE FROM jadwal WHERE id=?";
+            String sql
+                    = "DELETE FROM jadwal WHERE id=?";
 
-        PreparedStatement ps =
-        conn.prepareStatement(sql);
+            PreparedStatement ps
+                    = conn.prepareStatement(sql);
 
-        ps.setString(1, id);
+            ps.setString(1, id);
 
-        ps.executeUpdate();
+            ps.executeUpdate();
 
-        JOptionPane.showMessageDialog(this,
-        "Data berhasil dihapus");
+            JOptionPane.showMessageDialog(this,
+                    "Data berhasil dihapus");
 
-        tampilData();
+            tampilData();
 
-    } catch(Exception e) {
+        } catch (Exception e) {
 
-        JOptionPane.showMessageDialog(this,
-        e.getMessage());
-    }
+            JOptionPane.showMessageDialog(this,
+                    e.getMessage());
+        }
     }//GEN-LAST:event_btnHapusActionPerformed
 
     /**

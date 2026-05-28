@@ -204,6 +204,7 @@ public class FormKrs extends javax.swing.JFrame {
         jLabel5.setText("Tahun Ajaran              : ");
 
         cbMahasiswa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbMahasiswa.addActionListener(this::cbMahasiswaActionPerformed);
 
         cbMatkul.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -442,6 +443,10 @@ public class FormKrs extends javax.swing.JFrame {
         e.getMessage());
     }
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void cbMahasiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMahasiswaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbMahasiswaActionPerformed
 
     /**
      * @param args the command line arguments
